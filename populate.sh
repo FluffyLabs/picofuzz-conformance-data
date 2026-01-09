@@ -24,7 +24,7 @@ fi
 
 echo "Generating test data from jam-conformance ref: $JAM_VECTORS_REF"
 
-MAX_JOBS=20
+MAX_JOBS=5
 counter=0
 
 while IFS= read -r bin_file; do
