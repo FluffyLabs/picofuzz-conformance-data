@@ -24,26 +24,26 @@ fi
 
 echo "Generating test data from jam-conformance ref: $JAM_VECTORS_REF"
 
-MAX_JOBS=5
+MAX_JOBS=10
 counter=0
 
 while IFS= read -r bin_file; do
   file_num_even=$(printf "%08d" $((counter * 2)))
   file_num_odd=$(printf "%08d" $((counter * 2 + 1)))
 
-  $CONVERT $bin_file \
+  $CONVERT "$bin_file" \
     stf-vector as-state-fuzz-message to-bin \
-    $DEST/$DIR/$file_num_even.bin &
+    "$DEST/$file_num_even.bin" &
 
-  $CONVERT $bin_file \
+  $CONVERT "$bin_file" \
     stf-vector as-block-fuzz-message to-bin \
-    $DEST/$DIR/$file_num_odd.bin &
+    "$DEST/$file_num_odd.bin" &
 
   if (( (counter + 1) % MAX_JOBS == 0 )); then
     wait
   fi
 
-  ((counter++))
+  ((++counter))
 done < <(find "$SOURCE" -type f -name "*.bin" | sort)
 
 wait
