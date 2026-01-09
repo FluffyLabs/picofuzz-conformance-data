@@ -1,0 +1,51 @@
+name: Update picofuzz conformance data
+
+on:
+  schedule:
+    # Run daily at 11:11 AM UTC
+    - cron: '11 11 * * *'
+  workflow_dispatch:
+
+jobs:
+  update-submodules:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          submodules: recursive
+
+      - name: Update submodules
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+          # Update submodules to latest commits on their default branches
+          git submodule update --remote --recursive
+
+          # Check if there are any changes
+          if git diff --quiet; then
+            echo "No submodule updates available"
+            exit 0
+          fi
+
+      - name: Regenerate picofuzz data
+        run: ./populate.sh
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'chore: update submodules'
+          title: 'chore: update submodules'
+          body: |
+            This PR automatically updates the submodules to their latest versions.
+
+            Updated submodules:
+            - jam-conformance
+
+            Please review the changes before merging.
+          branch: update-submodules
+          delete-branch: true
+          
