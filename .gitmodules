@@ -1,0 +1,3 @@
+[submodule "jam-conformance"]
+	path = jam-conformance
+	url = https://github.com/davxy/jam-conformance.git
