@@ -4,7 +4,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 
 set -ex
 
-CONVERT="npx @typeberry/convert@0.5.1-a175c9e --"
+CONVERT="npx @typeberry/convert@next --"
 SOURCE=./jam-conformance/fuzz-reports/0.7.2/traces
 DEST=./picofuzz-data
 VERSION_FILE=$DEST/version
